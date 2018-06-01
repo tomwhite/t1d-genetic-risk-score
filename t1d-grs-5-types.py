@@ -1,7 +1,8 @@
 import csv
 import math
-import os
 import sys
+
+import grs
 
 # Calculate the genetic risk score (GRS) for T1D from the paper
 # Frequency and phenotype of type 1 diabetes in the first six decades of life: a cross-sectional, genetically stratified survival analysis from UK Biobank
@@ -20,38 +21,11 @@ if len(sys.argv) < 2:
 
 genome_23andme_file = sys.argv[1]
 
-variants = {}
+variants_23andme = grs.load_23andme(genome_23andme_file)
+variants_imputed = grs.load_imputed("imputed-snps-5-types.gen")
 
-# add imputed data
-
-if os.path.isfile("imputed-snps-5-types.gen"):
-    # format definition: http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html
-    with open("imputed-snps-5-types.gen", 'r') as file:
-        for line in file:
-            parts = line.split()
-            rsid, a, b = parts[1], parts[3], parts[4]
-            genotypes = (a + a, a + b, b + b)
-            probs = (float(parts[5]), float(parts[6]), float(parts[7]))
-            ind = probs.index(max(probs))
-            variants[rsid] = {'genotype': genotypes[ind], 'info': probs[ind]}
-            #print(rsid, variants[rsid])
-
-# load the 23andme data
-with open(genome_23andme_file, 'r') as file:
-    for line in file:
-        if not line.startswith('#'):
-            parts = line.split()
-            variants[parts[0]] = {'rsid': parts[0], 'chromosome': parts[1], 'position': parts[2], 'genotype': parts[3]}
-
-
-def allele_counts(genotype, effect_allele, non_effect_allele):
-    ac = genotype.count(effect_allele)
-    nac = genotype.count(non_effect_allele)
-    if ac + nac != 2:
-        reverse_genotype = genotype.replace('A', 't').replace('C', 'g').replace('G', 'c').replace('T', 'a').upper()
-        ac = reverse_genotype.count(effect_allele)
-        nac = reverse_genotype.count(non_effect_allele)
-    return ac, nac
+variants = variants_imputed.copy()
+variants.update(variants_23andme)
 
 
 def calculate_grs(snps_file):
@@ -79,7 +53,7 @@ def calculate_grs(snps_file):
         else:
             max_possible_grs += -weight * 2
         if variant:
-            allele_count, non_allele_count = allele_counts(variant['genotype'], snp_info['effect_allele'], snp_info['non_effect_allele'])
+            allele_count, non_allele_count = grs.allele_counts(variant['genotype'], snp_info['effect_allele'], snp_info['non_effect_allele'])
             total_snps_used += 1
             if weight >= 0:
                 score = weight * allele_count

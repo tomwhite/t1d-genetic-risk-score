@@ -1,6 +1,6 @@
-import csv
-import os
 import sys
+
+import grs
 
 # Calculate the genetic risk score (GRS) for T1D from the paper
 # Frequency and phenotype of type 1 diabetes in the first six decades of life: a cross-sectional, genetically stratified survival analysis from UK Biobank
@@ -19,37 +19,14 @@ if len(sys.argv) < 2:
 
 genome_23andme_file = sys.argv[1]
 
-variants = {}
+variants_23andme = grs.load_23andme(genome_23andme_file)
+variants_imputed = grs.load_imputed("imputed-snps-biobank.gen")
 
-# add imputed data
-
-if os.path.isfile("imputed-snps-biobank.gen"):
-    # format definition: http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html
-    with open("imputed-snps-biobank.gen", 'r') as file:
-        for line in file:
-            parts = line.split()
-            rsid, a, b = parts[1], parts[3], parts[4]
-            genotypes = (a + a, a + b, b + b)
-            probs = (float(parts[5]), float(parts[6]), float(parts[7]))
-            ind = probs.index(max(probs))
-            variants[rsid] = {'genotype': genotypes[ind], 'info': probs[ind]}
-            print(rsid, variants[rsid])
-
-# load the 23andme data
-with open(genome_23andme_file, 'r') as file:
-    for line in file:
-        if not line.startswith('#'):
-            parts = line.split()
-            variants[parts[0]] = {'rsid': parts[0], 'chromosome': parts[1], 'position': parts[2], 'genotype': parts[3]}
+variants = variants_imputed.copy()
+variants.update(variants_23andme)
 
 # Read in the snps to use for the score and store in a dict
-grs_snps = {}
-with open('analyses/grs-biobank.csv') as csvfile:
-    reader = csv.reader(csvfile)
-    next(reader, None)  # skip the headers
-    for row in reader:
-        grs_snps[row[0]] = {'snp': row[0], 'weight': row[3], 'effect_allele': row[4]}
-
+grs_snps = grs.load_analysis('analyses/grs-biobank.csv')
 del grs_snps['rs4948088'] # excluded from Thomas paper since it is out of Hardy-Weinberg equilibrium, see p124
 
 total_snps = 0
@@ -95,7 +72,7 @@ for rsid, snp_info in grs_snps.iteritems():
     total_snps += 1
     variant = variants.get(rsid, None)
     if variant:
-        allele_count = variant['genotype'].count(snp_info['effect_allele'])
+        allele_count, _ = grs.allele_counts(variant['genotype'], snp_info['effect_allele'])
         total_snps_used += 1
         genetic_risk_score += (float(snp_info['weight']) * allele_count)
         print(rsid, snp_info, variant, allele_count, (float(snp_info['weight']) * allele_count))

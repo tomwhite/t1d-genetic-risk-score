@@ -1,2 +1,3 @@
+*.pyc
 imputed-snps*.gen
 impute-out
