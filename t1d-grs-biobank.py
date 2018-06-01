@@ -14,7 +14,7 @@ import sys
 # Note that the HLA part of the score is calculated separately
 
 if len(sys.argv) < 2:
-    print("Usage: python t1d-grs.py <23andme-file>")
+    print("Usage: python t1d-grs-biobank.py <23andme-file>")
     sys.exit(1)
 
 genome_23andme_file = sys.argv[1]
@@ -23,9 +23,9 @@ variants = {}
 
 # add imputed data
 
-if os.path.isfile("imputed-snps.gen"):
+if os.path.isfile("imputed-snps-biobank.gen"):
     # format definition: http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html
-    with open("imputed-snps.gen", 'r') as file:
+    with open("imputed-snps-biobank.gen", 'r') as file:
         for line in file:
             parts = line.split()
             rsid, a, b = parts[1], parts[3], parts[4]
@@ -44,7 +44,7 @@ with open(genome_23andme_file, 'r') as file:
 
 # Read in the snps to use for the score and store in a dict
 grs_snps = {}
-with open('genetic_risk_score.csv') as csvfile:
+with open('analyses/grs-biobank.csv') as csvfile:
     reader = csv.reader(csvfile)
     next(reader, None)  # skip the headers
     for row in reader:

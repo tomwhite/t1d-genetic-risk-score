@@ -15,7 +15,7 @@ import sys
 # Note that the HLA part of the score is calculated separately
 
 if len(sys.argv) < 2:
-    print("Usage: python t1d-grs.py <23andme-file>")
+    print("Usage: python t1d-grs-5-types.py <23andme-file>")
     sys.exit(1)
 
 genome_23andme_file = sys.argv[1]
@@ -101,7 +101,7 @@ def calculate_grs(snps_file):
 
 
 for snps_file in ('grs-5types-said.csv', 'grs-5types-sidd.csv', 'grs-5types-sird.csv', 'grs-5types-mod.csv', 'grs-5types-mard.csv'):
-    total_snps, total_snps_used, genetic_risk_score, max_possible_grs, total_odds_ratio = calculate_grs(snps_file)
+    total_snps, total_snps_used, genetic_risk_score, max_possible_grs, total_odds_ratio = calculate_grs('analyses/' + snps_file)
     print(snps_file)
     print("Total SNPs: %s" % total_snps)
     print("Total SNPs used: %s" % total_snps_used)

@@ -4,7 +4,7 @@
 
 ALL_1000G_DIR=/Users/tom/projects-workspace/23andme-impute
 TMP_DIR=impute-out
-GEN_FILE=imputed-snps.gen
+GEN_FILE=imputed-snps-biobank.gen
 
 mkdir -p $OUT
 rm -r $GEN_FILE

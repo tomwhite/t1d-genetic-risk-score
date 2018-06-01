@@ -49,10 +49,10 @@ Run by setting your path to include the impute2 binary (the one I used for Mac i
 
 ```bash
 export PATH=$PATH:~/Downloads/impute_v2.3.2_MacOSX_Intel/
-./find-missing-snps.sh
+./find-missing-snps-biobank.sh
 ```
 
-If you look in the generated file `imputed-snps.gen` you should see the SNPs and the probabilities for each genotype.
+If you look in the generated file `imputed-snps-biobank.gen` you should see the SNPs and the probabilities for each genotype.
 The format of the file is described [here][impute_file_format], if you are interested.
 
 ### Running the analysis
@@ -62,7 +62,7 @@ You will need to have Python installed on your computer.
 Type the following (where the path is the actual path on your machine to the unzipped file fro 23andme).
 
 ```bash
-python t1d-grs.py /path/to/23andmeTextFile
+python t1d-grs-biobank.py /path/to/23andmeTextFile
 ```
 
 The program will print the genetic risk score, and a summary of what can be inferred from it. The papers mentioned above
@@ -70,17 +70,36 @@ have more details about how to interpret the findings.
 
 ### Notes on the code
 
-The file `genetic_risk_score.csv` contains the SNPs, their odds ratios and risk/effect alleles for the analysis. This
-data was compiled from the papers referenced above.
+The file `analyses/genetic_risk_score.csv` contains the SNPs, their odds ratios and risk/effect alleles for the
+analysis. This data was compiled from the papers referenced above.
 
 The code in `t1d-grs.py` parses the CSV file and uses the alleles from the 23andme data to calculate the GRS.
 For the HLA SNPs (rs2187668 and rs7454108) the calculation is more complex, and the algorithm described on
 [this blog post][diabetes_and_me] is used to find the risk scores for these SNPs.
 
+## More Analyses
+
+### Five types of diabetes
+
+[Novel subgroups of adult-onset diabetes and their association
+ with outcomes: a data-driven cluster analysis of six variables][Ahlqvist], March 2018, Ahlqvist et al.
+ 
+This paper proposes five types of diabetes that differ to the traditional type 1 and 2 distinctions. There is no
+GRS in the paper, but there are 14 SNPs, with a different set of odds ratios for each type.
+
+The following code will analyse an individual's 23andme data and show how similar it is to each of the five types.
+
+```bash
+export PATH=$PATH:~/Downloads/impute_v2.3.2_MacOSX_Intel/
+./find-missing-snps-5-types.sh
+python t1d-grs-5-types.py /path/to/23andmeTextFile
+```
+
 ## Other Papers
 
 [Feature ranking of type 1 diabetes susceptibility genes improves prediction of type 1 diabetes][Winkler], December 2014, Winkler et al
 
+[Ahlqvist]: https://www.thelancet.com/journals/landia/article/PIIS2213-8587(18)30051-2/fulltext
 [Oram]: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5642867/
 [Thomas]: https://www.thelancet.com/journals/landia/article/PIIS2213-8587%2817%2930362-5/fulltext?elsca1=tlxpr#sec1
 [Winkler]: https://link.springer.com/article/10.1007%2Fs00125-014-3362-1
