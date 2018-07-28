@@ -2,7 +2,7 @@
 
 # Run imputation to find good guesses for the SNPs missing from 23andme
 
-ALL_1000G_DIR=/Users/tom/projects-workspace/23andme-impute
+ALL_1000G_DIR=23andme-impute
 TMP_DIR=impute-out
 GEN_FILE=imputed-snps-5-types.gen
 

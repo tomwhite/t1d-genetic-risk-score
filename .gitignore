@@ -1,4 +1,5 @@
 *.pyc
+23andme-impute
 imputed-snps*.gen
 impute-out
 t1d-grs.png
