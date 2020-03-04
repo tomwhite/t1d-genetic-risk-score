@@ -68,7 +68,7 @@ else:
         print("rs7454108 not found in variant data")
 
 # Non HLA
-for rsid, snp_info in grs_snps.iteritems():
+for rsid, snp_info in grs_snps.items():
     total_snps += 1
     variant = variants.get(rsid, None)
     if variant:

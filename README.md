@@ -76,11 +76,14 @@ The format of the file is described [here][impute_file_format], if you are inter
 
 ### Running the analysis
 
-You will need to have Python 2.7 installed on your computer, as well as the matplotlib dependency.
-Install matplotlib by typing
+You will need to have Python 3 installed on your computer, as well as the matplotlib dependency.
+
+The best way to get the right environment to run the scripts is to create a virtualenv:
 
 ```bash
-pip install matplotlib
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 To run the analysis, type the following (where the path is the actual path on your machine to the unzipped file from 23andMe).
@@ -92,10 +95,12 @@ python t1d-grs-biobank.py /path/to/23andMeTextFile
 The program will print the genetic risk score, and a summary of what can be inferred from it. The papers mentioned above
 have more details about how to interpret the findings.
 
-The program will also create a histogram of genetic risk scores (like Figure 1 from [Thomas]) with the genetic
+There's a separate program (`hist.py`) to create a histogram of genetic risk scores (like Figure 1 from [Thomas]) with the genetic
 risk score for your data marked on it, like this:
 
 ![Distribution of genetic risk scores](t1d-grs-example.png "Distribution of genetic risk scores")
+
+[Note that the file should be updated with the individual's risk score.]
 
 If the blue dashed line is to the right of the cutoff line (in red), like it is in the diagram above, then T1D is not
 ruled out. If the blue line is to the left of the red line, then T1D is unlikely.

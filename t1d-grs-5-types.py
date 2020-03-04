@@ -43,7 +43,7 @@ def calculate_grs(snps_file):
     max_possible_grs = 0.0
     total_odds_ratio = 1.0
 
-    for rsid, snp_info in grs_snps.iteritems():
+    for rsid, snp_info in grs_snps.items():
         total_snps += 1
         variant = variants.get(rsid, None)
         odds_ratio = float(snp_info['odds_ratio'])
