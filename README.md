@@ -146,5 +146,5 @@ python t1d-grs-5-types.py /path/to/23andMeTextFile
 [Winkler]: https://link.springer.com/article/10.1007%2Fs00125-014-3362-1
 [impute2]: http://mathgen.stats.ox.ac.uk/impute/impute_v2.html
 [impute-23andme]: https://leesjohn.wordpress.com/2014/03/18/impute-your-whole-genome-from-23andme-data/
-[impute_file_format]: http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html
+[impute_file_format]: https://web.archive.org/web/20181010160322/http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html
 [diabetes_and_me]:https://digitalsauna.wordpress.com/2017/12/02/diabetes-and-me/
